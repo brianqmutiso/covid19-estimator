@@ -55,7 +55,7 @@ return $all_array;
     $casesForICUByRequestedTime=0.05*$infectionsByRequestedTime;
     $casesForVentilatorsByRequestedTime=(int)(0.02*$infectionsByRequestedTime);
      $dollarsInFlight=$infectionsByRequestedTime*$s1->region->avgDailyIncomePopulation*$s1->region->avgDailyIncomeInUSD*$timeToElapse;
-     $impact=array("currentInfected"=>$currentInfected,"infectionsByRequestedTime"=>$infectionsByRequestedTime,"severeCasesByRequestedTime"=>$severeCasesByRequestedTime,"hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,"casesForICUByRequestedTime"=>$casesForICUByRequestedTime,"casesForVentilatorsByRequestedTime"=>$casesForVentilatorsByRequestedTime,"dollarsInFlight"=>round($dollarsInFlight,2));
+     $impact=array("currentlyInfected"=>$currentInfected,"infectionsByRequestedTime"=>$infectionsByRequestedTime,"severeCasesByRequestedTime"=>$severeCasesByRequestedTime,"hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,"casesForICUByRequestedTime"=>$casesForICUByRequestedTime,"casesForVentilatorsByRequestedTime"=>$casesForVentilatorsByRequestedTime,"dollarsInFlight"=>round($dollarsInFlight,2));
 return array("impact"=>$impact);
   }
   function severeImpact($s1,$timeToElapse){
@@ -69,7 +69,7 @@ return array("impact"=>$impact);
     $casesForICUByRequestedTime=0.05*$infectionsByRequestedTime;
     $casesForVentilatorsByRequestedTime=(int)(0.02*$infectionsByRequestedTime);
     $dollarsInFlight=$infectionsByRequestedTime*$s1->region->avgDailyIncomePopulation*$s1->region->avgDailyIncomeInUSD*$timeToElapse;
-    $severeImpact=array("currentInfected"=>$currentInfected,"infectionsByRequestedTime"=>$infectionsByRequestedTime,"severeCasesByRequestedTime"=>$severeCasesByRequestedTime,"hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,"casesForICUByRequestedTime"=>$casesForICUByRequestedTime,"casesForVentilatorsByRequestedTime"=>$casesForVentilatorsByRequestedTime,"dollarsInFlight"=>round($dollarsInFlight,2));
+    $severeImpact=array("currentlyInfected"=>$currentInfected,"infectionsByRequestedTime"=>$infectionsByRequestedTime,"severeCasesByRequestedTime"=>$severeCasesByRequestedTime,"hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,"casesForICUByRequestedTime"=>$casesForICUByRequestedTime,"casesForVentilatorsByRequestedTime"=>$casesForVentilatorsByRequestedTime,"dollarsInFlight"=>round($dollarsInFlight,2));
 return array("severeImpact"=>$severeImpact);
   }
 function xml_data( $data, $xml=false) {
