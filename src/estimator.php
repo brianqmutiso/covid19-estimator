@@ -1,19 +1,15 @@
 <?php
-namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use SimpleXMLElement;
-class estimator extends Controller{
-  function Covid19ImpactEstimator(Request $request){
+  function Covid19ImpactEstimator(){
 $s1='{"region": {"name": "Africa","avgAge": 19.7,"avgDailyIncomeInUSD": 4,"avgDailyIncomePopulation": 0.73},"periodType": "days","timeToElapse": 38,
  "reportedCases": 2747,"population": 92931687,"totalHospitalBeds": 678874}';
 $sr=json_decode($s1);
 $data=array("data"=>$sr);
-$estimate=array("estimate"=>array_merge($this->impact($sr),$this->severeImpact($sr)));
+$estimate=array("estimate"=>array_merge(impact($sr),severeImpact($sr)));
 $all_array=array_merge($data,$estimate);
 $all=json_encode($all_array,JSON_FORCE_OBJECT);
-if (isset($request->datas)) {
+/*if (isset($request->datas)) {
   if ($request->datas=="json") {
-    $this->logs();
+    logs();
     return json_decode($all,true);
   }
   if ($request->datas=="logs") {
@@ -29,16 +25,18 @@ print_r($value['current_timestamp']."\t\t".$value['URL']."\t\t".$value['response
 if ($request->datas=="xml") {
 $dat=json_encode($data);
 $data=json_decode($dat,true);
-$array = array ('xmldata' => 'xmldata',$data,$this->impact($sr),$this->severeImpact($sr),
+$array = array ('xmldata' => 'xmldata',$data,impact($sr),severeImpact($sr),
 );
-$xml_data = $this->xml_data($array, false );
-$this->logs();
+$xml_data =xml_data($array, false );
+logs();
 return $xml_data->asXML();
 }}
 else{
-  $this->logs();
+ logs();
 return json_decode($all,true);
-}}
+}*/
+return json_decode($all,true);
+}
   function  impact($s1){
     $currentInfected=$s1->reportedCases*(10);
     $factor=(int)((int)($s1->timeToElapse)/3);
@@ -77,13 +75,13 @@ else{$subnode1= $subnode->addChild($key);
    $subnode1->addChild("$key","$value2");
    }} }  }
       else{
-        $this->xml_data($value, $xml); }}
+        xml_data($value, $xml); }}
     else {$xml->addChild("$key","$value");
     }}
   return $xml;
 }
 function logs(){
-  $posts=array("current_timestamp"=>time(),"URL"=>request()->path(),"response"=>http_response_code(),"time"=>"done in ".(string)round((microtime(true)-LARAVEL_START),2)."\t"."seconds");
+  $posts=array("current_timestamp"=>time(),"URL"=>"","response"=>http_response_code(),"time"=>"");
 if (!file_exists("logs.json")) {
  $logfile="logs.json";
 $lof=fopen($logfile, 'w');
@@ -93,4 +91,4 @@ fclose($lof);
   $logfile="logs.json";
 $lof=fopen($logfile, 'a');
 fwrite($lof,",".json_encode($posts));
-fclose($lof);}}}
+fclose($lof);}}
