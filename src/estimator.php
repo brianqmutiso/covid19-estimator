@@ -1,5 +1,6 @@
 <?php
-  function Covid19ImpactEstimator(){
+header('Content-Type: application/json'); 
+function Covid19ImpactEstimator(){
 $s1='{"region": {"name": "Africa","avgAge": 19.7,"avgDailyIncomeInUSD": 4,"avgDailyIncomePopulation": 0.73},"periodType": "days","timeToElapse": 38,
  "reportedCases": 2747,"population": 92931687,"totalHospitalBeds": 678874}';
 $sr=json_decode($s1);
@@ -92,3 +93,4 @@ fclose($lof);
 $lof=fopen($logfile, 'a');
 fwrite($lof,",".json_encode($posts));
 fclose($lof);}}
+//Covid19ImpactEstimator();
