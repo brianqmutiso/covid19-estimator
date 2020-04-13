@@ -42,6 +42,7 @@ else{
  logs();
 return json_decode($all,true);
 }*/
+print_r($all_array);
 return $all_array;
 }
   function  impact($s1,$timeToElapse){
