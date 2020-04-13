@@ -1,13 +1,19 @@
 <?php
-header('Content-Type: application/json'); 
-function Covid19ImpactEstimator(){
-$s1='{"region": {"name": "Africa","avgAge": 19.7,"avgDailyIncomeInUSD": 4,"avgDailyIncomePopulation": 0.73},"periodType": "days","timeToElapse": 38,
- "reportedCases": 2747,"population": 92931687,"totalHospitalBeds": 678874}';
-$sr=json_decode($s1);
+//header('Content-Type: application/json'); 
+function Covid19ImpactEstimator($data){
+$sr=json_encode($data);
+$sr=json_decode($sr);
+if($sr->periodType=="days"){
+  $timeToElapse=$sr->timeToElapse;
+}else if($sr->periodType=="weeks"){
+  $timeToElapse=($sr->timeToElapse)*7;
+}else{
+  $timeToElapse=($sr->timeToElapse)*30;
+}
 $data=array("data"=>$sr);
 $estimate=array("estimate"=>array_merge(impact($sr),severeImpact($sr)));
-$all_array=array_merge($data,$estimate);
-$all=json_encode($all_array,JSON_FORCE_OBJECT);
+$all_array=array_merge($data,impact($sr,$timeToElapse),severeImpact($sr,$timeToElapse));
+//$all=json_encode($all_array,JSON_FORCE_OBJECT);
 /*if (isset($request->datas)) {
   if ($request->datas=="json") {
     logs();
@@ -36,29 +42,33 @@ else{
  logs();
 return json_decode($all,true);
 }*/
-print_r($all);
+return $all_array;
 }
-  function  impact($s1){
+  function  impact($s1,$timeToElapse){
     $currentInfected=$s1->reportedCases*(10);
-    $factor=(int)((int)($s1->timeToElapse)/3);
+    $factor=(int)((int)($timeToElapse)/3);
     $infectionsByRequestedTime=$currentInfected*(pow(2,$factor));
     $severeCasesByRequestedTime=0.15*$infectionsByRequestedTime;
-    $hospitalBedsByRequestedTime=(int)(0.35*($s1->totalHospitalBeds))-$severeCasesByRequestedTime;
+    $val=(0.35*($datas->totalHospitalBeds))-$severeCasesByRequestedTime;
+    if($val<0){$hospitalBedsByRequestedTime=(floor($val*-1)*-1);}
+      else{$hospitalBedsByRequestedTime=floor($val);}
     $casesForICUByRequestedTime=0.05*$infectionsByRequestedTime;
     $casesForVentilatorsByRequestedTime=(int)(0.02*$infectionsByRequestedTime);
-     $dollarsInFlight=$infectionsByRequestedTime*$s1->region->avgDailyIncomePopulation*$s1->region->avgDailyIncomeInUSD*$s1->timeToElapse;
+     $dollarsInFlight=$infectionsByRequestedTime*$s1->region->avgDailyIncomePopulation*$s1->region->avgDailyIncomeInUSD*$timeToElapse;
      $impact=array("currentInfected"=>$currentInfected,"infectionsByRequestedTime"=>$infectionsByRequestedTime,"severeCasesByRequestedTime"=>$severeCasesByRequestedTime,"hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,"casesForICUByRequestedTime"=>$casesForICUByRequestedTime,"casesForVentilatorsByRequestedTime"=>$casesForVentilatorsByRequestedTime,"dollarsInFlight"=>round($dollarsInFlight,2));
 return array("impact"=>$impact);
   }
-  function severeImpact($s1){
+  function severeImpact($s1,$timeToElapse){
      $currentInfected=$s1->reportedCases*(50);
-      $factor=(int)((int)($s1->timeToElapse)/3);
+      $factor=(int)((int)($timeToElapse)/3);
     $infectionsByRequestedTime=$currentInfected*(pow(2,$factor));
     $severeCasesByRequestedTime=0.15*$infectionsByRequestedTime;
-    $hospitalBedsByRequestedTime=(int)(0.35*($s1->totalHospitalBeds))-$severeCasesByRequestedTime;
+    $val=(0.35*($datas->totalHospitalBeds))-$severeCasesByRequestedTime;
+    if($val<0){$hospitalBedsByRequestedTime=(floor($val*-1)*-1);}
+      else{$hospitalBedsByRequestedTime=floor($val);}
     $casesForICUByRequestedTime=0.05*$infectionsByRequestedTime;
     $casesForVentilatorsByRequestedTime=(int)(0.02*$infectionsByRequestedTime);
-    $dollarsInFlight=$infectionsByRequestedTime*$s1->region->avgDailyIncomePopulation*$s1->region->avgDailyIncomeInUSD*$s1->timeToElapse;
+    $dollarsInFlight=$infectionsByRequestedTime*$s1->region->avgDailyIncomePopulation*$s1->region->avgDailyIncomeInUSD*$timeToElapse;
     $severeImpact=array("currentInfected"=>$currentInfected,"infectionsByRequestedTime"=>$infectionsByRequestedTime,"severeCasesByRequestedTime"=>$severeCasesByRequestedTime,"hospitalBedsByRequestedTime"=>$hospitalBedsByRequestedTime,"casesForICUByRequestedTime"=>$casesForICUByRequestedTime,"casesForVentilatorsByRequestedTime"=>$casesForVentilatorsByRequestedTime,"dollarsInFlight"=>round($dollarsInFlight,2));
 return array("severeImpact"=>$severeImpact);
   }
@@ -93,4 +103,4 @@ fclose($lof);
 $lof=fopen($logfile, 'a');
 fwrite($lof,",".json_encode($posts));
 fclose($lof);}}
-//Covid19ImpactEstimator();
+
