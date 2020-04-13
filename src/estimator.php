@@ -11,7 +11,7 @@ if($sr->periodType=="days"){
   $timeToElapse=($sr->timeToElapse)*30;
 }
 $data=array("data"=>$sr);
-$estimate=array("estimate"=>array_merge(impact($sr),severeImpact($sr)));
+$estimate=array("estimate"=>array_merge(impact($sr,$timeToElapse),severeImpact($sr,$timeToElapse)));
 $all_array=array_merge($data,impact($sr,$timeToElapse),severeImpact($sr,$timeToElapse));
 //$all=json_encode($all_array,JSON_FORCE_OBJECT);
 /*if (isset($request->datas)) {
