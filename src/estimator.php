@@ -35,7 +35,7 @@ else{
  logs();
 return json_decode($all,true);
 }*/
-return json_decode($all,true);
+print_r(json_decode(impact($sr),true));
 }
   function  impact($s1){
     $currentInfected=$s1->reportedCases*(10);
